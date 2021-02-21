@@ -28,9 +28,9 @@ func HashFile(handler io.Reader) ([]byte, error) {
 	return hash.Sum(nil), nil
 }
 
-// constructs a single hash representing multiple files
+// AddHash constructs a single hash representing multiple files
 // by combining (xor) each individual hashes
-func (h *Hasher) addHash(handler io.Reader) error {
+func (h *Hasher) AddHash(handler io.Reader) error {
 	bytes, err := HashFile(handler)
 	if err != nil {
 		return err
