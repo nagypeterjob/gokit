@@ -1,4 +1,4 @@
-module github.com/nagypeterjob/gokit
+module github.com/nagypeterjob/gokit/v1
 
 go 1.15
 
