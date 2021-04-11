@@ -12,12 +12,36 @@ import (
 	"strings"
 )
 
-// Runs single command
+// Output runs single command
 //
 // Returns stdout as string & without terminating "\n" character
-func Run(ctx context.Context, command string, args ...string) (string, error) {
+func Output(ctx context.Context, command string, args ...string) (string, error) {
 	out, err := exec.CommandContext(ctx, command, args...).Output()
 	return strings.TrimSuffix(string(out), "\n"), err
+}
+
+// Run runs single command
+//
+// returns stdout / stderr as byte arrays and error
+func Run(ctx context.Context, command string, args ...string) ([]byte, []byte, error) {
+	var (
+		stdout = &bytes.Buffer{}
+		stderr = &bytes.Buffer{}
+	)
+	cmd := exec.CommandContext(ctx, command, args...)
+	cmd.Stdout = stdout
+	cmd.Stderr = stderr
+
+	return stdout.Bytes(), stderr.Bytes(), cmd.Run()
+}
+
+// RunWith takes stdout / stderr as bytes.Buffer pointers
+func RunWith(ctx context.Context, stdout *bytes.Buffer, stderr *bytes.Buffer, command string, args ...string) error {
+	cmd := exec.CommandContext(ctx, command, args...)
+	cmd.Stdout = stdout
+	cmd.Stderr = stderr
+
+	return cmd.Run()
 }
 
 // Enables to run piped commands
